@@ -1,35 +1,83 @@
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
-import React from 'react';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Pressable, Alert } from 'react-native';
+import React, { useState } from 'react';
 import Colors from "../../constent/Colors";
-import { Touchable } from 'react-native';
 import { router } from 'expo-router';
-
+import { registerUser } from '../api';
 export default function SignUp() {
+    const [form, setForm] = useState({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    });
+
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (key, value) => {
+        setForm({ ...form, [key]: value });
+    };
+
+    const handleSignUp = async () => {
+        if (!form.name || !form.email || !form.password || !form.password_confirmation) {
+            Alert.alert('Error', 'All fields are required');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const data = await registerUser(form.name, form.email, form.password, form.password_confirmation);
+            Alert.alert('Success', data.message);
+            router.push('auth/SignIn'); // Navigate to Sign In page after registratio
+        } catch (error) {
+            Alert.alert('Error', error.response?.data?.message || 'Something went wrong');
+        }
+        setLoading(false);
+    };
+
     return (
         <View style={styles.container}>
             <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
 
             <Text style={styles.title}>Create A New Account</Text>
 
-            {/* Full Name Input */}
-            <TextInput style={styles.textinput} placeholder='Full Name' />
+            <TextInput
+                style={styles.textinput}
+                placeholder='Full Name'
+                value={form.name}
+                onChangeText={(text) => handleChange('name', text)}
+            />
+            <TextInput
+                style={styles.textinput}
+                placeholder='Email'
+                keyboardType='email-address'
+                value={form.email}
+                onChangeText={(text) => handleChange('email', text)}
+            />
+            <TextInput
+                style={styles.textinput}
+                placeholder='Password'
+                secureTextEntry={true}
+                value={form.password}
+                onChangeText={(text) => handleChange('password', text)}
+            />
+            <TextInput
+                style={styles.textinput}
+                placeholder='Confirm Password'
+                secureTextEntry={true}
+                value={form.password_confirmation}
+                onChangeText={(text) => handleChange('password_confirmation', text)}
+            />
 
-            {/* Email Input */}
-            <TextInput style={styles.textinput} placeholder='Email' />
-
-            {/* Email Password */}
-            <TextInput style={styles.textinput} placeholder='Password' secureTextEntry={true} />
-
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
                 <Text style={styles.buttonText}>
-                    Create Account
+                    {loading ? 'Creating Account...' : 'Create Account'}
                 </Text>
             </TouchableOpacity>
 
             <View style={styles.footer}>
-                <Text style={{ fontFamily:'outfit' }}>Already have an account?</Text>
+                <Text style={{ fontFamily: 'outfit' }}>Already have an account?</Text>
                 <Pressable onPress={() => router.push('auth/SignIn')}>
-                    <Text style={{ color: Colors.primary,fontFamily:'outfit-bold' }}> Sign In Here</Text>
+                    <Text style={{ color: Colors.primary, fontFamily: 'outfit-bold' }}> Sign In Here</Text>
                 </Pressable>
             </View>
         </View>
