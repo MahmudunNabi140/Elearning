@@ -16,10 +16,9 @@ export default function SignIn() {
     try {
         const data = await loginUser(email, password);
         Alert.alert('Success', data.message);
-        await AsyncStorage.setItem('token', data.token); // Save token for later use
-        console.log('User Token:', data.token);
         // Navigate to the main app screen
-        router.push('../main/Home');
+        // router.push('../main/Home');
+        router.replace('/(tabs)/home');
     } catch (error) {
         Alert.alert('Error', error.message || 'Login failed');
     }

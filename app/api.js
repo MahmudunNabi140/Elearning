@@ -62,8 +62,8 @@ export const loginUser = async (email, password) => {
         // Store token if login is successful
         if (response.data.token) {
             await AsyncStorage.setItem('token', response.data.token);
+            await AsyncStorage.setItem('user', JSON.stringify(response.data.user)); 
         }
-
         return response.data;
     } catch (error) {
         return handleApiError(error);
