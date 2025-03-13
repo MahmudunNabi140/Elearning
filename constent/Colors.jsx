@@ -11,4 +11,7 @@ export default {
     dark: '#343a40',
     transparent: 'transparent',
     primaryLight: '#b8daff',
+    gray:'#858585',
+    grayLight:'#f2f2f2',
+
 }
