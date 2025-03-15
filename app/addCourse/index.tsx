@@ -20,7 +20,6 @@ export default function AddCourse() {
 
             // Debugging: Check raw response before parsing
             const responseText = await aiResp.response.text();
-            console.log('Raw AI Response:', responseText);
 
             // Parse response
             const parsedResponse = JSON.parse(responseText);
@@ -71,12 +70,13 @@ export default function AddCourse() {
                 <View style={{ display:'flex',
                     flexDirection:'row',
                     flexWrap:'wrap',
-                    gap:10
+                    gap:10,
+                    marginTop:6,
                  }}>
                     {topics.length > 0 ? (
                         topics.map((item, index) => (
-                            <Pressable key={index} style={styles.topicItem}>
-                                <Text>{item}</Text>
+                            <Pressable key={index} >
+                                <Text style={styles.topicItem}>{item}</Text>
                             </Pressable>
                         ))
                     ) : (
@@ -99,9 +99,10 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     topicItem: {
-        padding: 10,
-        marginVertical: 5,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
+        padding:7,
+        borderWidth: 0.4,
+        borderRadius: 99,
+        borderColor:Colors.primary,
+        paddingHorizontal:15,
     },
 });
